@@ -32,10 +32,29 @@ def build_page():
         </body>
         </html>"""
 
-    content = """
-    """
+    #Page content
+    username_label = "<label> Username </label>"
+    username_input ="<input type='text' name='username'/>"
 
-    return page_header + content + page_footer
+    password_label = "<label> Password </label>"
+    password_input = "<input type='password' name='password'/>"
+
+    ver_password_label = "<label> Verify Password </label>"
+    ver_password_input = "<input type='password' name='ver_password'/>"
+
+    email_label = "<label> Email (optional) </label>"
+    email_input = "<input type='text' name='email'/>"
+
+    submit = "<input type='submit'/>"
+
+    form = ("<form method='post'>" +
+            username_label + username_input + '<br>' + '<br>' +
+            password_label + password_input + '<br>' + '<br>' +
+            ver_password_label + ver_password_input + '<br>' + '<br>' +
+            email_label + email_input + '<br>' + '<br>' + submit + 
+            "</form>")
+
+    return page_header + form + page_footer
 
 
 
