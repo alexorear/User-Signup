@@ -16,9 +16,25 @@
 #
 import webapp2
 
+page_header = """
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>User Signup</title>
+    </head>
+    <body>
+        <h2>User Signup</h2>"""
+
+page_footer = """
+    </body>
+    </html>"""
+
+
+
 class MainHandler(webapp2.RequestHandler):
     def get(self):
-        self.response.write('Hello world!')
+        content = page_header + page_footer
+        self.response.write(content)
 
 app = webapp2.WSGIApplication([
     ('/', MainHandler)
