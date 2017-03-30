@@ -32,43 +32,47 @@ page_footer = """
     </body>
     </html>"""
 
-form_title = "<h2> User Signup </h2>"
-#User input form
-username_label = "<label> Username </label>"
-username_input ="<input type='text' name='username'/>"
-
-password_label = "<label> Password </label>"
-password_input = "<input type='password' name='password'/>"
-
-ver_password_label = "<label> Verify Password </label>"
-ver_password_input = "<input type='password' name='ver_password'/>"
-
-email_label = "<label> Email (optional) </label>"
-email_input = "<input type='text' name='email'/>"
-
-submit = "<input type='submit'/>"
-
-form = ("<form method='post'>" +
-        username_label + username_input + '<br>' + '<br>' +
-        password_label + password_input + '<br>' + '<br>' +
-        ver_password_label + ver_password_input + '<br>' + '<br>' +
-        email_label + email_input + '<br>' + '<br>' + submit + '<br>'
-        "</form>")
-
-
 
 class Index(webapp2.RequestHandler):
     def get(self):
 
-        # if we have an error display an error message
-        error = self.request.get("error")
-        if error:
-            error_esc = cgi.escape(error, quote=True)
-            error_element = '<p>' + error_esc + '</p>'
-        else:
-            error_element = ''
+        form_title = "<h2> User Signup </h2>"
+        #User input form html
+        username_label = "<label> Username </label>"
+        username_input ="<input type='text' name='username'/>"
 
-        content = page_header + form_title + form + error + page_footer
+        password_label = "<label> Password </label>"
+        password_input = "<input type='password' name='password'/>"
+
+        ver_password_label = "<label> Verify Password </label>"
+        ver_password_input = "<input type='password' name='ver_password'/>"
+
+        email_label = "<label> Email (optional) </label>"
+        email_input = "<input type='text' name='email'/>"
+
+        submit = "<input type='submit'/>"
+
+        # if we have an error display an error message
+        username_error = self.request.get("username_error")
+        pass_error = self.request.get("pass_error")
+
+        if username_error:
+            error_esc = cgi.escape(username_error, quote=True)
+            username_error = "<strong style='color:red'>" + error_esc + "</strong>"
+        if pass_error:
+            error_esc = cgi.escape(pass_error, quote=True)
+            pass_error =  "<strong style='color:red'>" + error_esc + "</strong>"
+
+        # form concantination
+        form = ("<form method='post'>" +
+                username_label + username_input + username_error + '<br>' + '<br>' +
+                password_label + password_input + pass_error + '<br>' + '<br>' +
+                ver_password_label + ver_password_input + '<br>' + '<br>' +
+                email_label + email_input + '<br>' + '<br>' + submit + '<br>'
+                "</form>")
+
+
+        content = page_header + form_title + form + page_footer
         self.response.write(content)
 
     def post(self):
@@ -78,17 +82,23 @@ class Index(webapp2.RequestHandler):
         email = self.request.get("email")
 
         if len(username) < 1:
-            error = "Please enter a username"
-            self.redirect("/?error=" + error)
+            error = " Please enter a valid username"
+            self.redirect("/?username_error=" + error)
 
         if password != ver_password:
-            error = "Passwords don't match"
-            self.redirect("/?error=" + error)
+            error = " Passwords don't match"
+            self.redirect("/?pass_error=" + error)
 
 
 
         self.response.write("New user has been added.")
 
+class Welcome(webapp2.RequestHandler):
+    def get(self):
+        self.responce.write("Thanks, NEW USER NAME, has been successfully added!")
+
+
 app = webapp2.WSGIApplication([
-    ('/', Index)
+    ('/', Index),
+    ('/Welcome', Welcome)
 ], debug=True)
