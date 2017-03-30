@@ -64,7 +64,7 @@ class Index(webapp2.RequestHandler):
             pass_error =  "<strong style='color:red'>" + error_esc + "</strong>"
 
         # form concantination
-        form = ("<form method='post'>" +
+        form = ("<form action='/Welcome' method='post'>" +
                 username_label + username_input + username_error + '<br>' + '<br>' +
                 password_label + password_input + pass_error + '<br>' + '<br>' +
                 ver_password_label + ver_password_input + '<br>' + '<br>' +
@@ -75,27 +75,30 @@ class Index(webapp2.RequestHandler):
         content = page_header + form_title + form + page_footer
         self.response.write(content)
 
+class Welcome(webapp2.RequestHandler):
     def post(self):
         username = self.request.get("username")
         password = self.request.get("password")
         ver_password = self.request.get("ver_password")
         email = self.request.get("email")
 
-        if len(username) < 1:
+        if len(username) < 3 or len(username) > 20:
             error = " Please enter a valid username"
             self.redirect("/?username_error=" + error)
+
+        if len(password) < 3 or len(password) > 20:
+            error = " Please enter a valid password"
+            self.redirect("/?pass_error=" + error)
 
         if password != ver_password:
             error = " Passwords don't match"
             self.redirect("/?pass_error=" + error)
 
+        #if no errors/redirect
 
 
-        self.response.write("New user has been added.")
-
-class Welcome(webapp2.RequestHandler):
-    def get(self):
-        self.responce.write("Thanks, NEW USER NAME, has been successfully added!")
+        content = page_header + '<p> Hello user! </p>' + page_footer
+        self.response.write(content)
 
 
 app = webapp2.WSGIApplication([
