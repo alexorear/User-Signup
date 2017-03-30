@@ -15,53 +15,71 @@
 # limitations under the License.
 #
 import webapp2
-
-def build_page():
-    #Standard page header
-    page_header = """
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <title>User Signup</title>
-        </head>
-        <body>
-            <h2>User Signup</h2>"""
-
-    #Standard page footer
-    page_footer = """
-        </body>
-        </html>"""
-
-    #Page content
-    username_label = "<label> Username </label>"
-    username_input ="<input type='text' name='username'/>"
-
-    password_label = "<label> Password </label>"
-    password_input = "<input type='password' name='password'/>"
-
-    ver_password_label = "<label> Verify Password </label>"
-    ver_password_input = "<input type='password' name='ver_password'/>"
-
-    email_label = "<label> Email (optional) </label>"
-    email_input = "<input type='text' name='email'/>"
-
-    submit = "<input type='submit'/>"
-
-    form = ("<form method='post'>" +
-            username_label + username_input + '<br>' + '<br>' +
-            password_label + password_input + '<br>' + '<br>' +
-            ver_password_label + ver_password_input + '<br>' + '<br>' +
-            email_label + email_input + '<br>' + '<br>' + submit + 
-            "</form>")
-
-    return page_header + form + page_footer
+import cgi
 
 
+#Standard page header
+page_header = """
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>User Signup</title>
+    </head>
+    <body>"""
 
-class MainHandler(webapp2.RequestHandler):
+#Standard page footer
+page_footer = """
+    </body>
+    </html>"""
+
+form_title = "<h2> User Signup </h2>"
+#User input form
+username_label = "<label> Username </label>"
+username_input ="<input type='text' name='username'/>"
+
+password_label = "<label> Password </label>"
+password_input = "<input type='password' name='password'/>"
+
+ver_password_label = "<label> Verify Password </label>"
+ver_password_input = "<input type='password' name='ver_password'/>"
+
+email_label = "<label> Email (optional) </label>"
+email_input = "<input type='text' name='email'/>"
+
+submit = "<input type='submit'/>"
+
+form = ("<form method='post'>" +
+        username_label + username_input + '<br>' + '<br>' +
+        password_label + password_input + '<br>' + '<br>' +
+        ver_password_label + ver_password_input + '<br>' + '<br>' +
+        email_label + email_input + '<br>' + '<br>' + submit + '<br>'
+        "</form>")
+
+
+
+class Index(webapp2.RequestHandler):
     def get(self):
-        self.response.write(build_page())
+
+        # if we have an error display an error message
+        error = self.request.get("error")
+        if error:
+            error_esc = cgi.escape(error, quote=True)
+            error_element = '<p>' + error_esc + '</p>'
+        else:
+            error_element = ''
+
+        content = page_header + form_title + form + error + page_footer
+        self.response.write(content)
+
+    def post(self):
+        username = self.request.get("username")
+
+        if len(username) < 1:
+            error = "Please enter a username"
+            self.redirect("/?error=" + error)
+
+        self.response.write("New user has been added.")
 
 app = webapp2.WSGIApplication([
-    ('/', MainHandler)
+    ('/', Index)
 ], debug=True)
