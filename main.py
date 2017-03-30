@@ -73,10 +73,19 @@ class Index(webapp2.RequestHandler):
 
     def post(self):
         username = self.request.get("username")
+        password = self.request.get("password")
+        ver_password = self.request.get("ver_password")
+        email = self.request.get("email")
 
         if len(username) < 1:
             error = "Please enter a username"
             self.redirect("/?error=" + error)
+
+        if password != ver_password:
+            error = "Passwords don't match"
+            self.redirect("/?error=" + error)
+
+
 
         self.response.write("New user has been added.")
 
