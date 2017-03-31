@@ -16,6 +16,7 @@
 #
 import webapp2
 import cgi
+import re
 
 
 #Standard page header
@@ -36,10 +37,12 @@ page_footer = """
 class Index(webapp2.RequestHandler):
     def get(self):
 
+        username = self.request.get('username')
+
         form_title = "<h2> User Signup </h2>"
         #User input form html
         username_label = "<label> Username </label>"
-        username_input ="<input type='text' name='username'/>"
+        username_input = "<input type='text' name='username'  value='{0}'/>" .format(username)
 
         password_label = "<label> Password </label>"
         password_input = "<input type='password' name='password'/>"
@@ -54,21 +57,29 @@ class Index(webapp2.RequestHandler):
 
         # if we have an error display an error message
         username_error = self.request.get("username_error")
-        pass_error = self.request.get("pass_error")
+        pass_error = self.request.get("password_error")
+        email_error = self.request.get("email_error")
 
         if username_error:
             error_esc = cgi.escape(username_error, quote=True)
             username_error = "<strong style='color:red'>" + error_esc + "</strong>"
+
         if pass_error:
             error_esc = cgi.escape(pass_error, quote=True)
             pass_error =  "<strong style='color:red'>" + error_esc + "</strong>"
+
+        if email_error:
+            error_esc = cgi.escape(email_error, quote=True)
+            email_error =  "<strong style='color:red'>" + error_esc + "</strong>"
+
+
 
         # form concantination
         form = ("<form action='/Welcome' method='post'>" +
                 username_label + username_input + username_error + '<br>' + '<br>' +
                 password_label + password_input + pass_error + '<br>' + '<br>' +
                 ver_password_label + ver_password_input + '<br>' + '<br>' +
-                email_label + email_input + '<br>' + '<br>' + submit + '<br>'
+                email_label + email_input + email_error + '<br>' + '<br>' + submit + '<br>'
                 "</form>")
 
 
@@ -82,22 +93,38 @@ class Welcome(webapp2.RequestHandler):
         ver_password = self.request.get("ver_password")
         email = self.request.get("email")
 
-        if len(username) < 3 or len(username) > 20:
+        # check for regular expressions to validate username, password and email
+        user_reg = re.compile(r"^[a-zA-Z0-9_-]{3,20}$")
+        def valid_username(username):
+            return user_reg.match(username)
+
+        password_reg = re.compile(r"^.{3,20}$")
+        def valid_password(password):
+            return password_reg.match(password)
+
+        email_reg = re.compile(r"^[\S]+@[\S]+.[\S]+$")
+        def valid_email(email):
+            return email_reg.match(email)
+
+        if not valid_username(username):
             error = " Please enter a valid username"
             self.redirect("/?username_error=" + error)
 
-        if len(password) < 3 or len(password) > 20:
-            error = " Please enter a valid password"
-            self.redirect("/?pass_error=" + error)
+        elif not valid_password(password):
+            error =" Please enter a valid password"
+            self.redirect("/?password_error=" + error)
 
-        if password != ver_password:
+        elif password != ver_password:
             error = " Passwords don't match"
-            self.redirect("/?pass_error=" + error)
+            self.redirect("/?password_error=" + error)
 
-        #if no errors/redirect
+        elif len(email) > 0:
+            if not valid_email(email):
+                error = " Please enter a valid email"
+                self.redirect("/?email_error=" + error)
 
 
-        content = page_header + '<p> Hello user! </p>' + page_footer
+        content = page_header + '<p> Welecome ' + username + '</p>' + page_footer
         self.response.write(content)
 
 
