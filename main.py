@@ -89,10 +89,14 @@ class Index(webapp2.RequestHandler):
 
 class Welcome(webapp2.RequestHandler):
     def post(self):
-        username = self.request.get("username")
-        password = self.request.get("password")
-        ver_password = self.request.get("ver_password")
-        email = self.request.get("email")
+        # escape and define variables from user input form
+        username = cgi.escape(self.request.get("username"), quote=True)
+        password = cgi.escape(self.request.get("password"),quote=True)
+        ver_password = cgi.escape(self.request.get("ver_password"),quote=True)
+        email = cgi.escape(self.request.get("email"),quote=True)
+
+        valid_error = False
+        url_param = []
 
         # check for regular expressions to validate username, password and email
         user_reg = re.compile(r"^[a-zA-Z0-9_-]{3,20}$")
@@ -107,23 +111,39 @@ class Welcome(webapp2.RequestHandler):
         def valid_email(email):
             return email_reg.match(email)
 
+        # Check for validation errors
         if not valid_username(username):
-            error = " Please enter a valid username"
-            self.redirect("/?username_error=" + error + "&username=" + username)
+            user_error = "username_error=Please enter a valid username &username=" + username
+            #self.redirect("/?username_error=" + error + "&username=" + username)
+            url_param.append(user_error)
+            valid_error = True
+        else:
+            url_param.append("username=" + username)
 
-        elif not valid_password(password):
-            error =" Please enter a valid password"
-            self.redirect("/?password_error=" + error)
+        if not valid_password(password):
+            pass_error ="password_error=Please enter a valid password"
+            #self.redirect("/?password_error=" + error)
+            url_param.append(pass_error)
+            valid_error = True
 
-        elif password != ver_password:
-            error = " Passwords don't match"
-            self.redirect("/?password_error=" + error)
+        if password != ver_password:
+            pass_error = "password_error=Passwords don't match"
+            #self.redirect("/?password_error=" + error)
+            url_param.append(pass_error)
+            valid_error = True
 
-        elif len(email) > 0:
+        if len(email) > 0:
             if not valid_email(email):
-                error = " Please enter a valid email"
-                self.redirect("/?email_error=" + error + "&email=" + email)
+                email_error = "email_error=Please enter a valid email &email=" + email
+                #self.redirect("/?email_error=" + error + "&email=" + email)
+                url_param.append(email_error)
+                valid_error = True
 
+        if valid_error == True:
+            redirect_message = ""
+            for i in url_param:
+                redirect_message += (i + "&")
+            self.redirect("/?" + redirect_message )
 
         content = page_header + '<h2>Welcome ' + username + '!</h2>' + page_footer
         self.response.write(content)
