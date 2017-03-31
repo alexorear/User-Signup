@@ -38,6 +38,7 @@ class Index(webapp2.RequestHandler):
     def get(self):
 
         username = self.request.get('username')
+        email = self.request.get('email')
 
         form_title = "<h2> User Signup </h2>"
         #User input form html
@@ -51,7 +52,7 @@ class Index(webapp2.RequestHandler):
         ver_password_input = "<input type='password' name='ver_password'/>"
 
         email_label = "<label> Email (optional) </label>"
-        email_input = "<input type='text' name='email'/>"
+        email_input = "<input type='text' name='email' value='{0}'/>" .format(email)
 
         submit = "<input type='submit'/>"
 
@@ -108,7 +109,7 @@ class Welcome(webapp2.RequestHandler):
 
         if not valid_username(username):
             error = " Please enter a valid username"
-            self.redirect("/?username_error=" + error)
+            self.redirect("/?username_error=" + error + "&username=" + username)
 
         elif not valid_password(password):
             error =" Please enter a valid password"
@@ -121,10 +122,10 @@ class Welcome(webapp2.RequestHandler):
         elif len(email) > 0:
             if not valid_email(email):
                 error = " Please enter a valid email"
-                self.redirect("/?email_error=" + error)
+                self.redirect("/?email_error=" + error + "&email=" + email)
 
 
-        content = page_header + '<p> Welecome ' + username + '</p>' + page_footer
+        content = page_header + '<h2>Welcome ' + username + '!</h2>' + page_footer
         self.response.write(content)
 
 
