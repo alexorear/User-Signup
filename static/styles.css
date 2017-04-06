@@ -4,10 +4,6 @@ body {
     background-color: #8fe7f5;
 }
 
-h2 {
-  text-align: center;
-}
-
 div {
   font-family: arial, sans-serif;
   color: #442900;
@@ -24,23 +20,21 @@ div div div {
 
 input[type="text"], [type="password"]
 {
-  width: 125px;
+  width: 145px;
   text-align: left;
 }
 
 .error {
-  padding-left: 35px;
+  padding-left: 45px;
   color: #d41e02;
   font-family: arial, sans-serif;
   font-style: oblique;
 }
 
 .form_label{
-  width: 120px;
+  width: 130px;
   font-weight: bold;
   text-align: right;
-  padding-left: 10px;
-  padding-right: 5px;
 }
 
 #form {
@@ -49,9 +43,10 @@ input[type="text"], [type="password"]
   box-shadow: 5px 5px 10px #579c95;
   border-style: solid;
   border-width: 6px;
-  width: 300px;
+  width: 318px;
   padding-top: 1px;
   padding-bottom: 12px;
+  text-align: center;
 }
 
 #submit {
