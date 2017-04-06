@@ -25,7 +25,6 @@ input[type="text"], [type="password"]
 }
 
 .error {
-  padding-left: 45px;
   color: #d41e02;
   font-family: arial, sans-serif;
   font-style: oblique;
