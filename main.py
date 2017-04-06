@@ -59,7 +59,7 @@ class Index(webapp2.RequestHandler):
                 valid_error = True
 
         if valid_error == True:
-        """if we have an error display an error message"""
+            """if we have an error display an error message"""
             template = env.get_template('signup.html')
             content = template.render(username_error = username_error,
                 username = username, pass_error = pass_error,

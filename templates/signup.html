@@ -1,23 +1,38 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2> User Signup </h2>
+<div id="form">
+<div><h2> User Sign-up </h2></div>
 <form method='post'>
-  <label> Username </label>
-  <input type='text' name='username'  value='{{ username }}'/>
-  <strong style='color:red'>{{ username_error }}</strong>
-  <br>
-  <label> Password </label>
-  <input type='password' name='password'/>
-  <strong style='color:red'>{{ pass_error }}</strong>
-  <br>
-  <label> Verify Password </label>
-  <input type='password' name='ver_password'/>
-  <br>
-  <label> Email (optional) </label>
-  <input type='text' name='email' value='{{ email }}'/>
-  <strong style='color:red'>{{ email_error }}</strong>
-  <br>
-  <input type='submit'/>
+  <div>
+    <div  class="form_label"><label> Username </label></div>
+    <div><input type='text' name='username'  value='{{ username }}'/></div>
+  </div>
+  <div>
+    <div class="error">{{ username_error}}</div>
+  </div>
+  <div>
+    <div class="form_label"><label> Password </label></div>
+    <div><input type='password' name='password'/></div>
+  </div>
+  <div>
+    <div class="error">{{ pass_error }}</div>
+  </div>
+  <div>
+    <div class="form_label"><label> Verify Password </label></div>
+    <div><input type='password' name='ver_password'/></div>
+  </div>
+  <div><br></div>
+  <div>
+    <div class="form_label"><label> Email (optional) </label></div>
+    <div><input type='text' name='email' value='{{ email }}'/></div>
+  </div>
+  <div>
+    <div class="error">{{ email_error }}</div>
+  </div>
+  <div>
+    <input id="submit" type='submit'/>
+  </div>
 </form>
+</div>
 {% endblock %}
